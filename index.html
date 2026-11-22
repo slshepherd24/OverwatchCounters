@@ -154,7 +154,7 @@ const ROLE_SVGS={
  Damage:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="m13 1-2 8h8l-9 14 1-10H5L13 1Z"/></svg>',
  Support:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2Z"/></svg>'};
 const RANK_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2 3 6 7 1-5 5 1 8-6-3-6 3 1-8-5-5 7-1z"/></svg>';
-const RANK_IMAGES={Bronze:'images/rank-bronze.png',Silver:'images/rank-silver.png',Gold:'images/rank-gold.png',Platinum:'images/rank-platinum.png',Emerald:'images/rank-emerald.png',Diamond:'images/rank-diamond.png',Master:'images/rank-master.png',Grandmaster:'images/rank-grandmaster.png'};
+const RANK_IMAGES={Bronze:'images/rank-bronze.png',Silver:'images/rank-silver.png',Gold:'images/rank-gold.png',Platinum:'images/rank-platinum.png',Emerald:'images/rank-emerald.png',Diamond:'images/rank-diamond.png',Master:'images/rank-master.png',Grandmaster:'images/rank-grandmaster.png',Champion:'images/rank-champion.png'};
 function rankIcon(rank){return RANK_IMAGES[rank]?`<img class="rank-emblem" src="${RANK_IMAGES[rank]}" alt="${escapeHTML(rank)} rank" loading="lazy">`:RANK_ICON}
 const MAP_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 5 6-3 6 3 6-3v17l-6 3-6-3-6 3zM9 2v17m6-14v17"/></svg>';
 function selectionIcon(kind,value){
