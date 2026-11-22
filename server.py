@@ -56,6 +56,10 @@ def retrieve(region,platform,rank,mapname):
     return {'rates':{},'meta':None,'error':'No compatible statistics feed available. Strategic scoring remains available.'}
 
 class Handler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        if urllib.parse.urlsplit(self.path).path in ('/', '/index.html'):
+            self.send_header('Cache-Control', 'no-store, max-age=0')
+        super().end_headers()
     def __init__(self,*args,**kwargs):super().__init__(*args,directory=str(ROOT),**kwargs)
     def do_GET(self):
         u=urllib.parse.urlsplit(self.path)
