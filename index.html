@@ -41,19 +41,20 @@
 .showcase-metadata b{font-size:13px;overflow-wrap:anywhere}
 .showcase-metadata small{display:block;color:var(--muted);font-size:10px;margin-bottom:4px}
 .enhanced-select{position:relative;min-width:0;flex:1}
-.enhanced-select select{display:none}
+.enhanced-select select{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
 .enhanced-trigger{display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:9px;color:var(--text);padding:7px 9px;min-height:44px;font:inherit;cursor:pointer}
 .enhanced-trigger .portrait{width:28px;height:28px;border-radius:6px}
 .enhanced-trigger .select-text{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.enhanced-menu{position:absolute;z-index:100;background:#1c2636;border:1px solid #536079;box-shadow:0 14px 35px #0009;border-radius:10px;top:calc(100% + 4px);left:0;right:0;max-height:310px;overflow:auto;padding:5px}
+.enhanced-menu{position:absolute;z-index:9999;background:#1c2636;border:1px solid #536079;box-shadow:0 14px 35px #0009;border-radius:10px;top:calc(100% + 4px);left:0;right:0;max-height:310px;overflow:auto;padding:5px}
 .enhanced-option{display:flex;align-items:center;gap:9px;padding:6px 9px;cursor:pointer;border-radius:7px;font-size:13px}
-.enhanced-option:hover{background:#34445d}
+.enhanced-option:hover{background:#34445d}.enhanced-option[hidden]{display:none}.hero-search{position:sticky;top:0;z-index:1;width:100%;background:#121b2a;color:#fff;border:1px solid #596781;border-radius:7px;padding:10px;margin-bottom:5px}
 .enhanced-option .portrait{width:30px;height:30px;border-radius:6px}
 .enhanced-option svg{width:26px;height:26px;color:var(--orange)}
 .enhanced-trigger svg{width:24px;height:24px;color:var(--orange)}
 @media(max-width:800px){.showcase-roles{grid-template-columns:repeat(3,minmax(0,1fr))}.showcase-metadata{grid-template-columns:1fr 1fr}}
+.rank-emblem{width:32px;height:32px;object-fit:contain;flex-shrink:0}.showcase-metadata .rank-emblem{width:40px;height:40px}.enhanced-option .rank-emblem{width:28px;height:28px}
 </style></head><body><main class="wrap"><header class="head"><div><div class="brand">OVERWATCH<span>COUNTERS</span></div><p class="sub">Pick your role. Read both teams. Find your best swap.</p></div><span class="tag" id="status">Strategy engine • Local profile</span></header>
-<div class="grid top-panels"><section class="card"><h2>Match setup</h2><div class="field modefield"><label>Match format</label><select id="mode"><option value="5v5">5v5 · Role Queue</option><option value="6v6">6v6 · Flexible Roles</option></select></div><div class="controls"><div class="field"><label>Your role</label><select id="role"><option value="Damage">Damage</option><option value="Tank">Tank</option><option value="Support">Support</option></select></div><div class="field"><label>Competitive rank</label><select id="rank"><option>Bronze</option><option>Silver</option><option>Gold</option><option selected>Platinum</option><option>Diamond</option><option>Master</option><option>Grandmaster</option><option>Champion</option></select></div><div class="field"><label>Map</label><select id="map"></select></div></div><div class="controls" style="margin-top:12px"><div class="field"><label>Current hero</label><select id="current"></select></div><div class="field"><label>Comfort cutoff</label><select id="cutoff"><option value="1">No cutoff</option><option value="3">3/10 minimum</option><option value="5" selected>5/10 minimum</option><option value="7">7/10 minimum</option></select></div><div class="field"><label>Recommendation style</label><select id="style"><option value="balanced">Balanced</option><option value="counter">Counter-focused</option><option value="synergy">Synergy-focused</option><option value="comfort">Comfort-focused</option></select></div></div><div class="selection-showcase">
+<div class="grid top-panels"><section class="card"><h2>Match setup</h2><div class="field modefield"><label>Match format</label><select id="mode"><option value="5v5">5v5 · Role Queue</option><option value="6v6">6v6 · Flexible Roles</option></select></div><div class="controls"><div class="field"><label>Your role</label><select id="role"><option value="Damage">Damage</option><option value="Tank">Tank</option><option value="Support">Support</option></select></div><div class="field"><label>Competitive rank</label><select id="rank"><option>Bronze</option><option>Silver</option><option>Gold</option><option selected>Platinum</option><option>Emerald</option><option>Diamond</option><option>Master</option><option>Grandmaster</option><option>Champion</option></select></div><div class="field"><label>Map</label><select id="map"></select></div></div><div class="controls" style="margin-top:12px"><div class="field"><label>Current hero</label><select id="current"></select></div><div class="field"><label>Comfort cutoff</label><select id="cutoff"><option value="1">No cutoff</option><option value="3">3/10 minimum</option><option value="5" selected>5/10 minimum</option><option value="7">7/10 minimum</option></select></div><div class="field"><label>Recommendation style</label><select id="style"><option value="balanced">Balanced</option><option value="counter">Counter-focused</option><option value="synergy">Synergy-focused</option><option value="comfort">Comfort-focused</option></select></div></div><div class="selection-showcase">
  <div class="showcase-title">YOUR MATCH PROFILE</div>
  <div class="showcase-roles" id="roleVisuals"></div>
  <div class="showcase-current" id="heroVisual"></div>
@@ -99,7 +100,7 @@ async function refreshStats(force=false){
 }
 
 
-const HERO_PORTRAITS = {"wuyang": "images/wuyang.png", "winston": "images/winston.png", "shion": "images/shion.png", "bastion": "images/bastion.png", "domina": "images/domina.png", "symmetra": "images/symmetra.png", "mercy": "images/mercy.png", "widowmaker": "images/widowmaker.png", "hanzo": "images/hanzo.png", "l-cio": "images/l-cio.png", "torbj-rn": "images/torbj-rn.png", "venture": "images/venture.png", "sombra": "images/sombra.png", "zenyatta": "images/zenyatta.png", "roadhog": "images/roadhog.png", "brigitte": "images/brigitte.png", "reaper": "images/reaper.png", "jetpack-cat": "images/jetpack-cat.png", "anran": "images/anran.png", "vendetta": "images/vendetta.png", "d-va": "images/d-va.png", "ana": "images/ana.png", "illari": "images/illari.png", "pharah": "images/pharah.png", "ramattra": "images/ramattra.png", "freja": "images/freja.png", "soldier-76": "images/soldier-76.png", "emre": "images/emre.png", "orisa": "images/orisa.png", "baptiste": "images/baptiste.png", "sojourn": "images/sojourn.png", "echo": "images/echo.png", "lifeweaver": "images/lifeweaver.png", "ashe": "images/ashe.png", "zarya": "images/zarya.png", "mauga": "images/mauga.png", "doomfist": "images/doomfist.png", "hazard": "images/hazard.png", "reinhardt": "images/reinhardt.png", "cassidy": "images/cassidy.png", "mizuki": "images/mizuki.png", "wrecking-ball": "images/wrecking-ball.png", "tracer": "images/tracer.png", "doctrine": "images/doctrine.png", "junkrat": "images/junkrat.png", "genji": "images/genji.png", "mei": "images/mei.png", "sierra": "images/sierra.png", "juno": "images/juno.png", "kiriko": "images/kiriko.png", "junker-queen": "images/junker-queen.png", "sigma": "images/sigma.png", "torbjorn": "images/torbj-rn.png", "lucio": "images/l-cio.png"};
+const HERO_PORTRAITS = {"moira":"images/moira.png","wuyang": "images/wuyang.png", "winston": "images/winston.png", "shion": "images/shion.png", "bastion": "images/bastion.png", "domina": "images/domina.png", "symmetra": "images/symmetra.png", "mercy": "images/mercy.png", "widowmaker": "images/widowmaker.png", "hanzo": "images/hanzo.png", "l-cio": "images/l-cio.png", "torbj-rn": "images/torbj-rn.png", "venture": "images/venture.png", "sombra": "images/sombra.png", "zenyatta": "images/zenyatta.png", "roadhog": "images/roadhog.png", "brigitte": "images/brigitte.png", "reaper": "images/reaper.png", "jetpack-cat": "images/jetpack-cat.png", "anran": "images/anran.png", "vendetta": "images/vendetta.png", "d-va": "images/d-va.png", "ana": "images/ana.png", "illari": "images/illari.png", "pharah": "images/pharah.png", "ramattra": "images/ramattra.png", "freja": "images/freja.png", "soldier-76": "images/soldier-76.png", "emre": "images/emre.png", "orisa": "images/orisa.png", "baptiste": "images/baptiste.png", "sojourn": "images/sojourn.png", "echo": "images/echo.png", "lifeweaver": "images/lifeweaver.png", "ashe": "images/ashe.png", "zarya": "images/zarya.png", "mauga": "images/mauga.png", "doomfist": "images/doomfist.png", "hazard": "images/hazard.png", "reinhardt": "images/reinhardt.png", "cassidy": "images/cassidy.png", "mizuki": "images/mizuki.png", "wrecking-ball": "images/wrecking-ball.png", "tracer": "images/tracer.png", "doctrine": "images/doctrine.png", "junkrat": "images/junkrat.png", "genji": "images/genji.png", "mei": "images/mei.png", "sierra": "images/sierra.png", "juno": "images/juno.png", "kiriko": "images/kiriko.png", "junker-queen": "images/junker-queen.png", "sigma": "images/sigma.png", "torbjorn": "images/torbj-rn.png", "lucio": "images/l-cio.png"};
 function heroSlug(h){return String(h).toLowerCase().replace('ú','-').replace('ö','-').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function portrait(h){const src=HERO_PORTRAITS[heroSlug(h)];return '<span class="portrait">'+(src?`<img src="${src}" alt="${escapeHTML(h)}" loading="lazy" onerror="this.replaceWith(document.createTextNode('◈'))">`:'◈')+'</span>'}
@@ -153,11 +154,13 @@ const ROLE_SVGS={
  Damage:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="m13 1-2 8h8l-9 14 1-10H5L13 1Z"/></svg>',
  Support:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2Z"/></svg>'};
 const RANK_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 2 3 6 7 1-5 5 1 8-6-3-6 3 1-8-5-5 7-1z"/></svg>';
+const RANK_IMAGES={Bronze:'images/rank-bronze.png',Silver:'images/rank-silver.png',Gold:'images/rank-gold.png',Platinum:'images/rank-platinum.png',Emerald:'https://boostpirate.com/static/img/ranks/overwatch/emerald.webp?v=6ab89a3e',Diamond:'images/rank-diamond.png',Master:'images/rank-master.png',Grandmaster:'images/rank-grandmaster.png'};
+function rankIcon(rank){return RANK_IMAGES[rank]?`<img class="rank-emblem" src="${RANK_IMAGES[rank]}" alt="${escapeHTML(rank)} rank" loading="lazy">`:RANK_ICON}
 const MAP_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 5 6-3 6 3 6-3v17l-6 3-6-3-6 3zM9 2v17m6-14v17"/></svg>';
 function selectionIcon(kind,value){
  if(kind==='hero')return value?portrait(value):'<span class="portrait">?</span>';
  if(kind==='role')return ROLE_SVGS[value]||'';
- if(kind==='rank')return RANK_ICON;
+ if(kind==='rank')return rankIcon(value);
  if(kind==='map')return MAP_ICON;
  if(kind==='mode')return ROLE_SVGS.Tank;
  if(kind==='cutoff')return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5m6 14V9m6 10V3m6 16v-8"/></svg>';
@@ -171,7 +174,7 @@ function updateShowcase(){
  $('roleVisuals').innerHTML=['Tank','Damage','Support'].map(r=>`<button type="button" class="role-tile ${r===role?'active':''}" data-set-role="${r}">${ROLE_SVGS[r]}${r}</button>`).join('');
  document.querySelectorAll('[data-set-role]').forEach(btn=>btn.onclick=()=>{if($('role').value!==btn.dataset.setRole){$('role').value=btn.dataset.setRole;$('role').dispatchEvent(new Event('change'))}});
  $('heroVisual').innerHTML=(hero?portrait(hero):'<span class="portrait">?</span>')+`<div><b>${escapeHTML(hero||'Choose your hero')}</b><small>${escapeHTML(role)} · Your current pick</small></div>`;
- $('rankVisual').innerHTML=RANK_ICON+`<div><small>COMPETITIVE RANK</small><b>${escapeHTML($('rank').value)}</b></div>`;
+ $('rankVisual').innerHTML=rankIcon($('rank').value)+`<div><small>COMPETITIVE RANK</small><b>${escapeHTML($('rank').value)}</b></div>`;
  $('mapVisual').innerHTML=MAP_ICON+`<div><small>SELECTED MAP</small><b>${escapeHTML($('map').value)}</b></div>`;
 }
 function enhanceSelect(select,kind){
@@ -182,6 +185,7 @@ function enhanceSelect(select,kind){
   select.parentNode.insertBefore(wrapper,select);wrapper.appendChild(select);
   const trigger=document.createElement('button');trigger.type='button';trigger.className='enhanced-trigger';
   trigger.onclick=e=>{e.stopPropagation();document.querySelectorAll('.enhanced-menu').forEach(x=>x.remove());const menu=document.createElement('div');menu.className='enhanced-menu';
+   if(kind==='hero'){const search=document.createElement('input');search.type='search';search.placeholder='Search heroes…';search.className='hero-search';search.addEventListener('click',ev=>ev.stopPropagation());search.addEventListener('input',()=>{const q=search.value.toLowerCase();menu.querySelectorAll('.enhanced-option').forEach(el=>el.hidden=!el.textContent.toLowerCase().includes(q))});menu.appendChild(search)}
    [...select.options].forEach(o=>{const option=document.createElement('div');option.className='enhanced-option';option.innerHTML=selectionIcon(kind,o.value)+'<span>'+escapeHTML(o.textContent)+'</span>';
    option.onclick=ev=>{ev.stopPropagation();select.value=o.value;select.dispatchEvent(new Event('change',{bubbles:true}));menu.remove()};menu.appendChild(option)});
    wrapper.appendChild(menu);
@@ -204,6 +208,7 @@ buildSlots=function(...args){oldBuildSlots(...args);updateEnhanced()};
 const oldSyncPicks=syncPicks;
 syncPicks=function(...args){oldSyncPicks(...args);updateEnhanced()};
 document.addEventListener('change',()=>queueMicrotask(updateEnhanced));
+window.addEventListener('load',updateEnhanced);
  $('map').innerHTML=maps.map(m=>`<option>${m}</option>`).join('');
  for(let k of ['role','rank','map','cutoff','style'])if(previous[k])$(k).value=previous[k];
  setRole();rebuildTeams(false);updateEnhanced();
